@@ -1,0 +1,97 @@
+
+# Case Study: Dictionary Application using Hash Tables
+# Subject: Data Structures (SPPU SE Computer Engineering)
+
+class Dictionary:
+    def __init__(self, size=10):
+        self.size = size
+        self.table = [[] for _ in range(size)]
+
+    # Hash function to calculate index
+    def hash_function(self, word):
+        return sum(ord(char) for char in word.lower()) % self.size
+
+    # Insert a word and its meaning
+    def insert(self, word, meaning):
+        index = self.hash_function(word)
+
+        # Check if word already exists
+        for item in self.table[index]:
+            if item[0].lower() == word.lower():
+                item[1] = meaning
+                print("Meaning updated successfully!")
+                return
+
+        # Separate chaining for collision resolution
+        self.table[index].append([word, meaning])
+        print("Word added successfully!")
+
+    # Search for a word
+    def search(self, word):
+        index = self.hash_function(word)
+
+        for item in self.table[index]:
+            if item[0].lower() == word.lower():
+                print("Word:", item[0])
+                print("Meaning:", item[1])
+                return
+
+        print("Word not found in dictionary.")
+
+    # Delete a word
+    def delete(self, word):
+        index = self.hash_function(word)
+
+        for item in self.table[index]:
+            if item[0].lower() == word.lower():
+                self.table[index].remove(item)
+                print("Word deleted successfully!")
+                return
+
+        print("Word not found in dictionary.")
+
+    # Display all words and meanings
+    def display(self):
+        print("\n--- Dictionary Contents ---")
+        for index, chain in enumerate(self.table):
+            print(index, ":", end=" ")
+            for word, meaning in chain:
+                print(f"[{word}: {meaning}]", end=" -> ")
+            print("None")
+
+
+# Main program
+dictionary = Dictionary()
+
+while True:
+    print("\n===== DICTIONARY APPLICATION =====")
+    print("1. Add Word")
+    print("2. Search Word")
+    print("3. Delete Word")
+    print("4. Display Dictionary")
+    print("5. Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        word = input("Enter word: ")
+        meaning = input("Enter meaning: ")
+        dictionary.insert(word, meaning)
+
+    elif choice == "2":
+        word = input("Enter word to search: ")
+        dictionary.search(word)
+
+    elif choice == "3":
+        word = input("Enter word to delete: ")
+        dictionary.delete(word)
+
+    elif choice == "4":
+        dictionary.display()
+
+    elif choice == "5":
+        print("Thank you for using Dictionary Application!")
+        break
+
+    else:
+        print("Invalid choice! Please try again.")
